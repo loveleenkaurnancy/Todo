@@ -13,24 +13,26 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewPager : ViewPager
     lateinit var roundedSolid: RelativeLayout
     lateinit var bar: RelativeLayout
-    private var isLogin = true
+    private var isProgress = true
     private val mCurrentSelectedScreen = 0
     private var mNextSelectedScreen = 0
-    lateinit var txtsignup: TextView
-    lateinit var txtlogin: TextView
+    lateinit var txt_completed: TextView
+    lateinit var txt_in_progress: TextView
     private var distance: Float = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportActionBar?.hide()
+
         roundedSolid = findViewById(R.id.roundedsolid)
-        txtsignup = findViewById(R.id.txtsignup)
-        txtlogin = findViewById(R.id.txtlogin)
+        txt_completed = findViewById(R.id.txt_completed)
+        txt_in_progress = findViewById(R.id.txt_in_progress)
         bar = findViewById(R.id.bar)
 
         bar.setOnClickListener{
-            if (isLogin) {
+            if (isProgress) {
                 Handler().post {
                     //  mPager.setCurrentItem(2); //Where "2" is the position you want to go
                     viewPager.currentItem = getItem(+1) //getItem(-1) for previous
@@ -107,17 +109,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun barmovementController() {
-        if (isLogin) {
+        if (isProgress) {
             roundedSolid.animate().translationX(distance)
-            isLogin = false
-            txtsignup.setTextColor(resources.getColor(R.color.white))
-            txtlogin.setTextColor(resources.getColor(R.color.colorPrimary))
+            isProgress = false
+            txt_completed.setTextColor(resources.getColor(R.color.white))
+            txt_in_progress.setTextColor(resources.getColor(R.color.colorPrimary))
             viewPager.arrowScroll(ViewPager.FOCUS_RIGHT)
         } else {
             roundedSolid.animate().translationX(0f)
-            isLogin = true
-            txtlogin.setTextColor(resources.getColor(R.color.white))
-            txtsignup.setTextColor(resources.getColor(R.color.colorPrimary))
+            isProgress = true
+            txt_in_progress.setTextColor(resources.getColor(R.color.white))
+            txt_completed.setTextColor(resources.getColor(R.color.colorPrimary))
             viewPager.arrowScroll(ViewPager.FOCUS_LEFT)
         }
     }

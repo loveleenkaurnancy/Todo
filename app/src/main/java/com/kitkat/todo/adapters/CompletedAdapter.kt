@@ -11,10 +11,10 @@ import com.kitkat.todo.R
 import com.kitkat.todo.model.TaskModel
 import kotlinx.android.synthetic.main.layout_item.view.*
 
-class InProgressAdapter(
+class CompletedAdapter(
     private val mValues: ArrayList<TaskModel>,
     private val mContext: Context
-) : RecyclerView.Adapter<InProgressAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<CompletedAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_item, parent, false)
@@ -25,6 +25,7 @@ class InProgressAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
 
+        holder.task_name.setTextColor(mContext.resources.getColor(R.color.green))
         holder.task_name.text = item.task_name.toString()
         holder.task_date.text = item.task_date.toString()
 

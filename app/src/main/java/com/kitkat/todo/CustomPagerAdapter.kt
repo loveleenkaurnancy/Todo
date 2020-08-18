@@ -1,15 +1,30 @@
 package com.kitkat.todo
 
 import android.content.Context
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import com.kitkat.todo.adapters.CompletedAdapter
+import com.kitkat.todo.adapters.InProgressAdapter
 import com.kitkat.todo.model.AuthModel
+import com.kitkat.todo.model.TaskModel
+import com.kitkat.todo.utilities.SwipeHelper
 
 class CustomPagerAdapter(private val mContext: Context) : PagerAdapter() {
 
     private val TAG = this::class.java.simpleName
+
+    lateinit var rv_in_progress : RecyclerView
+    lateinit var rv_completed : RecyclerView
+
+    val arrayList1 = ArrayList<TaskModel>()
+    val arrayList2 = ArrayList<TaskModel>()
 
 
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
@@ -17,77 +32,52 @@ class CustomPagerAdapter(private val mContext: Context) : PagerAdapter() {
         val inflater = LayoutInflater.from(mContext)
         val layout = inflater.inflate(modelObject.layoutResId, collection, false) as ViewGroup
 
+        val inProgressAdapter = InProgressAdapter(arrayList1, mContext)
 
         if (position == 0)
         {
 
+            for (i in 0 until 4) {
+                val itemModel = TaskModel()
+                itemModel.task_name = "Task " + i
+                itemModel.task_date = "18-Aug-2020"
 
-//            edt_password = layout.findViewById(R.id.edt_password)
-//
-//            layout.txt_login.setOnClickListener{
-//
-//                linearLayout_login = layout.findViewById(R.id.linearLayout_login)
-//                val input_email_name = layout.emailorusername.text
-//                val input_password_login = layout.edt_password.text
-//
-//                if (Validations.validateForLogin(input_email_name.toString(), input_password_login.toString(),
-//                        linearLayout_login))
-//                {
-//                    //DialogBox.showLoader(mContext)
-//                    DialogBox.showLoginLoader2()
-//                    requestForLogin(input_email_name.toString(), input_password_login.toString(),token)
-//                }
-//
-//            }
-//
-//            layout.eye.setOnClickListener{
-//                manageVisibilityOfPassword()
-//            }
-//
-//            forget = layout.findViewById(R.id.forget)
-//            forget.setOnClickListener(){
-//
-//                val intent = Intent(mContext, ForgotActivity::class.java)
-//                mContext.startActivity(intent)
-//            }
+                arrayList1.add(itemModel)
+            }
+
+            rv_in_progress = layout.findViewById(R.id.rv_in_progress)
+            rv_in_progress.setLayoutManager(LinearLayoutManager(mContext))
+            rv_in_progress.adapter = inProgressAdapter
+
+            object : SwipeHelper(mContext, rv_in_progress) {
+
+                override fun instantiateUnderlayButton(
+                    viewHolder: RecyclerView.ViewHolder,
+                    list: MutableList<UnderlayButton>
+                ) {
+                    list.add(
+                        UnderlayButton(mContext.resources.getString(R.string.done), 0, Color.parseColor("#8ae08d"),
+                            object : UnderlayButtonClickListener {
+                                override fun onClick(pos: Int) {
+
+                                    arrayList2.add(arrayList1[pos])
+                                    arrayList1.removeAt(pos)
+
+                                    inProgressAdapter.notifyDataSetChanged()
+
+                                    val completedAdapter = CompletedAdapter(arrayList2, mContext)
+                                    rv_completed.adapter = completedAdapter
+
+                                }
+                            })
+                    )
+                }
+            }.attachSwipe()
 
         } else if (position == 1) {
 
-//            edt_password1 = layout.findViewById(R.id.edt_password1)
-//            edt_repassword = layout.findViewById(R.id.edt_repassword)
-//
-//            ccp = layout.findViewById(R.id.ccp)
-//            if(!(countryCode.equals("")))
-//            {
-//                ccp.setCountryForNameCode(countryCode)
-//            }
-//
-//            layout.txt_signup.setOnClickListener() {
-//
-//                val input_name = layout.edt_name.text
-//                val input_email = layout.edt_email.text
-//                val input_mobile = layout.edt_mobile.text
-//                val input_password = layout.edt_password1.text
-//                val input_re_password = layout.edt_repassword.text
-//                val input_ccp = ccp.selectedCountryCode
-//                linearLayout = layout.findViewById(R.id.linearLayout)
-//
-//                if (Validations.validateForSignUp(input_name.toString(), input_email.toString(),
-//                        input_password.toString(), input_re_password.toString(), input_mobile.toString(), linearLayout))
-//                {
-//                    DialogBox.showLoginLoader2()
-//                    attemptToSignup(input_name.toString(), input_email.toString(), input_mobile.toString(),
-//                        input_password.toString(), input_ccp.toString())
-//                }
-//            }
-//
-//            layout.eye1.setOnClickListener{
-//                manageVisibilityOfPassword1()
-//            }
-//
-//            layout.eye2.setOnClickListener{
-//                manageVisibilityOfPassword2()
-//            }
+            rv_completed = layout.findViewById(R.id.rv_completed)
+            rv_completed.setLayoutManager(LinearLayoutManager(mContext))
 
         }
 
