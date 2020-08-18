@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Todo</string>
+    <string name="in_progress">In-PROGRESS</string>
+    <string name="completed">COMPLETED</string>
+
+    <string name="one">one</string>
+    <string name="two">two</string>
+
+</resources>
